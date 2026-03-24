@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Fragmento Um</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="titulo">Uso de Fragmentos!</string>
+
+    <!-- textos a serem utilizados nos fragmentos -->
+    <string name="txtFrag1">fragmento 1</string>
+    <string name="btFrag1">botão 1</string>
+
+    <string name="txtFrag2">Fragmento Dois</string>
+    <string name="btFrag2">Botão Dois</string>
+
+    <string name="txtFrag3">FRAGMENTO 3</string>
+    <string name="btFrag3">BOTÃO 3</string>
+
 </resources>
