@@ -14,4 +14,7 @@
     <string name="txtFrag3">FRAGMENTO 3</string>
     <string name="btFrag3">BOTÃO 3</string>
 
+    <string name="msgPar">O número do fragmento é par!</string>
+    <string name="msgImpar">O número do fragmento é ímpar!</string>
+
 </resources>

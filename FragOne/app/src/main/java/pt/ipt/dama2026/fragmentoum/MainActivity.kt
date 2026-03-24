@@ -26,9 +26,10 @@ class MainActivity : AppCompatActivity() {
 
         // instanciar os fragmentos
         f1 = MyFragment.novaInstancia(getString(R.string.txtFrag1),
-                                      getString(R.string.btFrag1))
-        f2 = MyFragment.novaInstancia(getString(R.string.txtFrag2), getString(R.string.btFrag2))
-        f3 = MyFragment.novaInstancia(getString(R.string.txtFrag3), getString(R.string.btFrag3))
+                                      getString(R.string.btFrag1),
+                                      1)
+        f2 = MyFragment.novaInstancia(getString(R.string.txtFrag2), getString(R.string.btFrag2),2)
+        f3 = MyFragment.novaInstancia(getString(R.string.txtFrag3), getString(R.string.btFrag3),3)
 
         // injetar estes três fragmentos no layout, na interface da app
         val fragmentTransaction = supportFragmentManager.beginTransaction()
