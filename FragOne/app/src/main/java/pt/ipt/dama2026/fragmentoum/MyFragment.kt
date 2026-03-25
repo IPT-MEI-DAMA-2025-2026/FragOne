@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import pt.ipt.dama2026.fragmentoum.databinding.FragmentMyBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,6 +25,10 @@ private const val ARG_NUM_FRAGMENTO = "0"
  */
 class MyFragment : Fragment() {
     // TODO: Rename and change types of parameters
+
+    // var para aceder ao layout do fragmento
+    private lateinit var binding: FragmentMyBinding
+
     // texto a mostrar na TextView do Fragmento
     private var txtTextView: String? = null
 
@@ -51,21 +56,21 @@ class MyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_my, container, false)
+        //val view: View = inflater.inflate(R.layout.fragment_my, container, false)
+        binding = FragmentMyBinding.inflate(inflater, container, false)
 
-        // var auxiliar para instanciar os dados do fragmento (TextView)
-        val aux_textView = view.findViewById<TextView>(R.id.txtFragmento)
-        aux_textView.text = txtTextView
-
-        // var auxiliar para instanciar os dados do fragmento (Button)
-        val aux_button = view.findViewById<Button>(R.id.btFragmento)
-        aux_button.text = txtButton
+        // atribuir o texto ao Botão
+        binding.btFragmento.text = txtButton
 
         // ação do botão
-        aux_button.setOnClickListener {
+        binding.btFragmento.setOnClickListener {
+
+            // atribuir o texto à Text View
+            binding.txtFragmento.text = txtTextView
+
             // Processar o nº do fragmento
             if (numFragmento % 2 == 0) {
-                Snackbar.make(view, getString(R.string.msgPar), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, getString(R.string.msgPar), Snackbar.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this.context, getString(R.string.msgImpar), Toast.LENGTH_SHORT)
                     .show()
@@ -74,7 +79,7 @@ class MyFragment : Fragment() {
 
 //        // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_my, container, false)
-        return view
+        return binding.root
     }
 
     companion object {
