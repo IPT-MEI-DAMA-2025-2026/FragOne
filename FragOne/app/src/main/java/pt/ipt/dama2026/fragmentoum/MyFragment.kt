@@ -1,5 +1,6 @@
 package pt.ipt.dama2026.fragmentoum
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,9 @@ class MyFragment : Fragment() {
     // var para aceder ao layout do fragmento
     private lateinit var binding: FragmentMyBinding
 
+    // var para recolher a ação feita sobre o fragmento
+    private var listener: OnFragmentClickListener? = null
+
     // texto a mostrar na TextView do Fragmento
     private var txtTextView: String? = null
 
@@ -38,6 +42,20 @@ class MyFragment : Fragment() {
     // var auxiliar com o número do Fragmento
     private var numFragmento: Byte = 0
 
+    /**
+     * interface para comunicar com a Activity
+     */
+    interface OnFragmentClickListener {
+        fun onFragmentClicked(fragment: MyFragment)
+    }
+
+    /**
+     * verifica se a Activity implementa a interface
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = context as? OnFragmentClickListener
+    }
 
     /**
      * Cria o fragmento com um texto e um botão     *
@@ -51,6 +69,9 @@ class MyFragment : Fragment() {
         }
     }
 
+    /**
+     * Tarefas executadas quando o fragmento é instanciado
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +85,9 @@ class MyFragment : Fragment() {
 
         // ação do botão
         binding.btFragmento.setOnClickListener {
+
+            // recolha de qual o fragmento que foi criado
+            listener?.onFragmentClicked(this)
 
             // atribuir o texto à Text View
             binding.txtFragmento.text = txtTextView
@@ -81,6 +105,14 @@ class MyFragment : Fragment() {
 //        return inflater.inflate(R.layout.fragment_my, container, false)
         return binding.root
     }
+
+    /**
+     * limpar o conteúdo do texto da TextView
+     */
+    fun limparTexto() {
+        binding.txtFragmento.text = ""
+    }
+
 
     companion object {
         /**

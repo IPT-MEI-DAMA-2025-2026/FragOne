@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MyFragment.OnFragmentClickListener {
 
     // variáveis para manipular os fragmentos
     private lateinit var f1: MyFragment
@@ -38,5 +38,14 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.add(R.id.fragmento3, f3)
         fragmentTransaction.commit()
 
+    }
+
+    /**
+     * Avalia o que fazer quando um fragmento é 'clicado'
+     */
+    override fun onFragmentClicked(fragment: MyFragment) {
+        if (fragment != f1) f1.limparTexto()
+        if (fragment != f2) f2.limparTexto()
+        if (fragment != f3) f3.limparTexto()
     }
 }
