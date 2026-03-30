@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import pt.ipt.dama2026.fragmentoum.databinding.FragmentMyBinding
 
@@ -41,6 +40,10 @@ class MyFragment : Fragment() {
 
     // var auxiliar com o número do Fragmento
     private var numFragmento: Byte = 0
+
+    // var para comunicar com a Activity, utilizando o ViewModel
+    private val viewModel: SharedViewModel by activityViewModels()
+
 
     /**
      * interface para comunicar com a Activity
@@ -86,25 +89,37 @@ class MyFragment : Fragment() {
         // ação do botão
         binding.btFragmento.setOnClickListener {
 
-            // recolha de qual o fragmento que foi criado
-            listener?.onFragmentClicked(this)
-
-            // atribuir o texto à Text View
             binding.txtFragmento.text = txtTextView
+
+            viewModel.selecionarFragmento(numFragmento.toInt())
+
 
             // Processar o nº do fragmento
             if (numFragmento % 2 == 0) {
-                Snackbar.make(binding.root, getString(R.string.msgPar), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, getString(R.string.msgPar), Snackbar.LENGTH_SHORT)
+                    .show()
             } else {
                 Toast.makeText(this.context, getString(R.string.msgImpar), Toast.LENGTH_SHORT)
                     .show()
             }
         }
-
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_my, container, false)
+        //        // Inflate the layout for this fragment
+        //        return inflater.inflate(R.layout.fragment_my, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.fragmentSelecionado.observe(viewLifecycleOwner) { selecionado ->
+
+            // se NÃO for este fragmento → limpa
+            if (selecionado != numFragmento.toInt()) {
+                binding.txtFragmento.text = ""
+            }
+        }
+    }
+
 
     /**
      * limpar o conteúdo do texto da TextView
