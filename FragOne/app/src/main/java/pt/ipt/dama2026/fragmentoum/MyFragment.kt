@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import pt.ipt.dama2026.fragmentoum.databinding.FragmentMyBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -89,14 +93,17 @@ class MyFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.fragmentSelecionado.observe(viewLifecycleOwner) { selecionado ->
-
-            // se NÃO for este fragmento → limpa
-            if ((selecionado != null) && (selecionado != numFragmento)) {
-                binding.txtFragmento.text = ""
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.fragmentSelecionado.collect {evento ->
+                    if (evento != null && evento.id != numFragmento) {
+                        binding.txtFragmento.text = ""
+                    }
+                }
             }
         }
     }
