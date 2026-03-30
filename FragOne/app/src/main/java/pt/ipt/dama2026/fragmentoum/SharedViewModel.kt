@@ -9,10 +9,11 @@ import androidx.lifecycle.ViewModel
  */
 class SharedViewModel : ViewModel() {
 
-    private val _fragmentSelecionado = MutableLiveData<Int>()
-    val fragmentSelecionado: LiveData<Int> = _fragmentSelecionado
+    private val _fragmentSelecionado = MutableLiveData<Int?>()
+    val fragmentSelecionado: LiveData<Int?> = _fragmentSelecionado
 
     fun selecionarFragmento(num: Int) {
+        _fragmentSelecionado.value = null
         _fragmentSelecionado.value = num
     }
 }

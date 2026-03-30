@@ -1,6 +1,5 @@
 package pt.ipt.dama2026.fragmentoum
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,11 +25,9 @@ private const val ARG_NUM_FRAGMENTO = "0"
 class MyFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
-    // var para aceder ao layout do fragmento
-    private lateinit var binding: FragmentMyBinding
-
-    // var para recolher a ação feita sobre o fragmento
-    private var listener: OnFragmentClickListener? = null
+    // ViewBinding seguro
+    private var _binding: FragmentMyBinding? = null
+    private val binding get() = _binding!!
 
     // texto a mostrar na TextView do Fragmento
     private var txtTextView: String? = null
@@ -39,26 +36,10 @@ class MyFragment : Fragment() {
     private var txtButton: String? = null
 
     // var auxiliar com o número do Fragmento
-    private var numFragmento: Byte = 0
+    private var numFragmento: Int = 0
 
     // var para comunicar com a Activity, utilizando o ViewModel
     private val viewModel: SharedViewModel by activityViewModels()
-
-
-    /**
-     * interface para comunicar com a Activity
-     */
-    interface OnFragmentClickListener {
-        fun onFragmentClicked(fragment: MyFragment)
-    }
-
-    /**
-     * verifica se a Activity implementa a interface
-     */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        listener = context as? OnFragmentClickListener
-    }
 
     /**
      * Cria o fragmento com um texto e um botão     *
@@ -68,7 +49,7 @@ class MyFragment : Fragment() {
         arguments?.let {
             txtTextView = it.getString(ARG_TEXTO_TEXT_VIEW)
             txtButton = it.getString(ARG_TEXTO_BOTAO)
-            numFragmento = it.getByte(ARG_NUM_FRAGMENTO)
+            numFragmento = it.getInt(ARG_NUM_FRAGMENTO)
         }
     }
 
@@ -81,7 +62,7 @@ class MyFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         //val view: View = inflater.inflate(R.layout.fragment_my, container, false)
-        binding = FragmentMyBinding.inflate(inflater, container, false)
+        _binding = FragmentMyBinding.inflate(inflater, container, false)
 
         // atribuir o texto ao Botão
         binding.btFragmento.text = txtButton
@@ -91,20 +72,20 @@ class MyFragment : Fragment() {
 
             binding.txtFragmento.text = txtTextView
 
-            viewModel.selecionarFragmento(numFragmento.toInt())
+            viewModel.selecionarFragmento(numFragmento)
 
 
             // Processar o nº do fragmento
-            if (numFragmento % 2 == 0) {
+            val isPar = numFragmento % 2 == 0
+            if (isPar) {
                 Snackbar.make(binding.root, getString(R.string.msgPar), Snackbar.LENGTH_SHORT)
                     .show()
             } else {
-                Toast.makeText(this.context, getString(R.string.msgImpar), Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), getString(R.string.msgImpar), Toast.LENGTH_SHORT)
                     .show()
             }
         }
-        //        // Inflate the layout for this fragment
-        //        return inflater.inflate(R.layout.fragment_my, container, false)
+
         return binding.root
     }
 
@@ -114,18 +95,16 @@ class MyFragment : Fragment() {
         viewModel.fragmentSelecionado.observe(viewLifecycleOwner) { selecionado ->
 
             // se NÃO for este fragmento → limpa
-            if (selecionado != numFragmento.toInt()) {
+            if ((selecionado != null) && (selecionado != numFragmento)) {
                 binding.txtFragmento.text = ""
             }
         }
     }
 
 
-    /**
-     * limpar o conteúdo do texto da TextView
-     */
-    fun limparTexto() {
-        binding.txtFragmento.text = ""
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
@@ -141,12 +120,12 @@ class MyFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun novaInstancia(txtLabel: String, txtBotao: String, numFrag: Byte) =
+        fun novaInstancia(txtLabel: String, txtBotao: String, numFrag: Int) =
             MyFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TEXTO_TEXT_VIEW, txtLabel)
                     putString(ARG_TEXTO_BOTAO, txtBotao)
-                    putByte(ARG_NUM_FRAGMENTO, numFrag)
+                    putInt(ARG_NUM_FRAGMENTO, numFrag)
                 }
             }
     }
