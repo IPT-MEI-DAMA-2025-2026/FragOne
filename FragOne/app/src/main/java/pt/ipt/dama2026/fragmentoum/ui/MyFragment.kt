@@ -1,5 +1,6 @@
-package pt.ipt.dama2026.fragmentoum
+package pt.ipt.dama2026.fragmentoum.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import pt.ipt.dama2026.fragmentoum.R
 import pt.ipt.dama2026.fragmentoum.databinding.FragmentMyBinding
+import pt.ipt.dama2026.fragmentoum.viewModel.SharedViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,7 +64,8 @@ class MyFragment : Fragment() {
      * Tarefas executadas quando o fragmento é instanciado
      */
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
@@ -74,10 +78,11 @@ class MyFragment : Fragment() {
         // ação do botão
         binding.btFragmento.setOnClickListener {
 
-            binding.txtFragmento.text = txtTextView
-
+// lógica -> ViewModel
             viewModel.selecionarFragmento(numFragmento)
 
+            // UI local
+            binding.txtFragmento.text = txtTextView
 
             // Processar o nº do fragmento
             val isPar = numFragmento % 2 == 0
@@ -85,7 +90,9 @@ class MyFragment : Fragment() {
                 Snackbar.make(binding.root, getString(R.string.msgPar), Snackbar.LENGTH_SHORT)
                     .show()
             } else {
-                Toast.makeText(requireContext(), getString(R.string.msgImpar), Toast.LENGTH_SHORT)
+                Snackbar.make(binding.root, getString(R.string.msgImpar), Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(Color.RED)
+                    .setTextColor(Color.YELLOW)
                     .show()
             }
         }
@@ -99,8 +106,10 @@ class MyFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.fragmentSelecionado.collect {evento ->
-                    if (evento != null && evento.id != numFragmento) {
+                viewModel.uiState.collect { state ->
+                    if (state.fragmentoSelecionado != null &&
+                        state.fragmentoSelecionado != numFragmento
+                    ) {
                         binding.txtFragmento.text = ""
                     }
                 }

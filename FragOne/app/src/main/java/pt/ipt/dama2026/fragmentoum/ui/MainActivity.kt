@@ -1,10 +1,11 @@
-package pt.ipt.dama2026.fragmentoum
+package pt.ipt.dama2026.fragmentoum.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import pt.ipt.dama2026.fragmentoum.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,17 +21,17 @@ class MainActivity : AppCompatActivity() {
 
         // instanciar os fragmentos, criando uma lista de fragments
         val fragments = listOf(
-            MyFragment.novaInstancia(
+            MyFragment.Companion.novaInstancia(
                 getString(R.string.txtFrag1),
                 getString(R.string.btFrag1),
                 1
             ),
-            MyFragment.novaInstancia(
+            MyFragment.Companion.novaInstancia(
                 getString(R.string.txtFrag2),
                 getString(R.string.btFrag2),
                 2
             ),
-            MyFragment.novaInstancia(
+            MyFragment.Companion.novaInstancia(
                 getString(R.string.txtFrag3),
                 getString(R.string.btFrag3),
                 3
